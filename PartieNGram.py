@@ -32,16 +32,21 @@ def unigram_probalite(mot, lissage, delta):
         prob_mot = freq_dist_unigram.freq(mot)
     else: #Laplace
         prob_mot =  (freq_dist_unigram.__getitem__(mot)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
+    if prob_mot ==0:
+        return 0
+    else:
+        return math.log(prob_mot)
 
-    return prob_mot
 
 def bigram_probalite(bigram_seq, lissage,delta):
     if lissage == "Aucun":
         prob_mot = freq_dist_bigrame.freq(bigram_seq)
     else: #Laplace
         prob_mot =  (freq_dist_bigrame.__getitem__(bigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
-
-    return prob_mot
+    if prob_mot ==0:
+        return 0
+    else:
+        return math.log(prob_mot)
 
 
 def trigram_probalite(trigram_seq, lissage,delta):
@@ -49,8 +54,10 @@ def trigram_probalite(trigram_seq, lissage,delta):
         prob_mot = freq_dist_trigrame.freq(trigram_seq)
     else: #Laplace
         prob_mot =  (freq_dist_trigrame.__getitem__(trigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
-
-    return prob_mot
+    if prob_mot ==0:
+        return 0
+    else:
+        return math.log(prob_mot)
 
 
 def probalite_phrase(phrase, lissage, delta, N):
@@ -82,9 +89,9 @@ def probalite_phrase(phrase, lissage, delta, N):
 
 p1 = re.compile(r'{*"(.*)":\s*\["(.+\b)",\s"(.+\b)",\s"(.+\b)",\s"(.+\b)"],*}*')
 
-Lissage = "Lapace"
+#Lissage = "Lapace"
 test_delta = 1
-#Lissage = "Aucun"
+Lissage = "Aucun"
 
 
 for n in range(1,4):
