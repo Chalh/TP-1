@@ -35,7 +35,7 @@ def unigram_probalite(mot, lissage, delta):
 
     return prob_mot
 
-def bigram_probalite(bigram_seq, lissage):
+def bigram_probalite(bigram_seq, lissage,delta):
     if lissage == "Aucun":
         prob_mot = freq_dist_bigrame.freq(bigram_seq)
     else: #Laplace
@@ -44,7 +44,7 @@ def bigram_probalite(bigram_seq, lissage):
     return prob_mot
 
 
-def trigram_probalite(trigram_seq, lissage):
+def trigram_probalite(trigram_seq, lissage,delta):
     if lissage == "Aucun":
         prob_mot = freq_dist_trigrame.freq(trigram_seq)
     else: #Laplace
