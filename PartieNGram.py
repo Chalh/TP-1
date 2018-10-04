@@ -27,11 +27,11 @@ freq_dist_unigram = FreqDist(tokens_train)
 freq_dist_bigrame = FreqDist(bigram_train)
 freq_dist_trigrame = FreqDist(trigram_train)
 
-def unigram_probalite(mot, lissage):
+def unigram_probalite(mot, lissage, delta):
     if lissage == "Aucun":
         prob_mot = freq_dist_unigram.freq(mot)
     else: #Laplace
-        prob_mot =  (freq_dist_unigram.__getitem__(mot)+1)/(nb_mot_proverbe + nb_mot_vocabulaire)
+        prob_mot =  (freq_dist_unigram.__getitem__(mot)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
 
     return prob_mot
 
@@ -39,7 +39,7 @@ def bigram_probalite(bigram_seq, lissage):
     if lissage == "Aucun":
         prob_mot = freq_dist_bigrame.freq(bigram_seq)
     else: #Laplace
-        prob_mot =  (freq_dist_bigrame.__getitem__(bigram_seq)+1)/(nb_mot_proverbe + nb_mot_vocabulaire)
+        prob_mot =  (freq_dist_bigrame.__getitem__(bigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
 
     return prob_mot
 
@@ -48,12 +48,12 @@ def trigram_probalite(trigram_seq, lissage):
     if lissage == "Aucun":
         prob_mot = freq_dist_trigrame.freq(trigram_seq)
     else: #Laplace
-        prob_mot =  (freq_dist_trigrame.__getitem__(trigram_seq)+1)/(nb_mot_proverbe + nb_mot_vocabulaire)
+        prob_mot =  (freq_dist_trigrame.__getitem__(trigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
 
     return prob_mot
 
 
-def probalite_phrase(phrase, lissage, N):
+def probalite_phrase(phrase, lissage, delta, N):
     switcher = {
         1: unigram_probalite,
         2: bigram_probalite,
@@ -65,16 +65,16 @@ def probalite_phrase(phrase, lissage, N):
     # Execute the function
     if N ==1:
         for v in tok_phrase:
-            prob_phrase = func(v, lissage) + prob_phrase
+            prob_phrase = func(v, lissage,delta) + prob_phrase
     else:
         if N ==2:
             bgrm_phrase = list(nltk.bigrams(tok_phrase))
             for v in bgrm_phrase:
-                prob_phrase = func(v, lissage) + prob_phrase
+                prob_phrase = func(v, lissage,delta) + prob_phrase
         else:
             trm_phrase = list(nltk.trigrams(tok_phrase))
             for v in trm_phrase:
-                prob_phrase = func(v, lissage) + prob_phrase
+                prob_phrase = func(v, lissage,delta) + prob_phrase
 
     return prob_phrase
 
@@ -82,8 +82,10 @@ def probalite_phrase(phrase, lissage, N):
 
 p1 = re.compile(r'{*"(.*)":\s*\["(.+\b)",\s"(.+\b)",\s"(.+\b)",\s"(.+\b)"],*}*')
 
-#Lissage = "Lapace"
-Lissage = "Aucun"
+Lissage = "Lapace"
+test_delta = 1
+#Lissage = "Aucun"
+
 
 for n in range(1,4):
     print ("---------------------------------------%d - GRAME---------------------------------------------",n)
