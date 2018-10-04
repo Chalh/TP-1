@@ -97,11 +97,11 @@ for n in range(1,4):
         if m1 is not None:
             proverbe = m1.group(1)
             proverbe_final = proverbe.replace("***", m1.group(2))
-            prob_phrase_essai = probalite_phrase(proverbe_final, Lissage, n)
+            prob_phrase_essai = probalite_phrase(proverbe_final, Lissage,test_delta, n)
 
             for j in range (1,4):
                 proverbe_essai = proverbe.replace("***", m1.group(2+j))
-                prob_phrase = probalite_phrase(proverbe_essai,Lissage,n)
+                prob_phrase = probalite_phrase(proverbe_essai,Lissage,test_delta,n)
                 if prob_phrase_essai < prob_phrase:
                     proverbe_final =  proverbe_essai
                     prob_phrase_essai = prob_phrase
