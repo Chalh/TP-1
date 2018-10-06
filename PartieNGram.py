@@ -39,10 +39,16 @@ def unigram_probalite(mot, lissage, delta):
 
 
 def bigram_probalite(bigram_seq, lissage,delta):
-    if lissage == "Aucun":
-        prob_mot = freq_dist_bigrame.freq(bigram_seq)
-    else: #Laplace
-        prob_mot =  (freq_dist_bigrame.__getitem__(bigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
+    c_mot_precedent = freq_dist_unigram.__getitem__(bigram_seq[0])
+
+    if c_mot_precedent ==0:
+        prob_mot = 0
+    else:
+        if lissage == "Aucun":
+            prob_mot = freq_dist_bigrame.__getitem__(bigram_seq)/c_mot_precedent
+        else:  # Laplace
+            prob_mot = (freq_dist_bigrame.__getitem__(bigram_seq) + delta) / (c_mot_precedent + nb_mot_vocabulaire)
+
     if prob_mot ==0:
         return 0
     else:
@@ -50,10 +56,17 @@ def bigram_probalite(bigram_seq, lissage,delta):
 
 
 def trigram_probalite(trigram_seq, lissage,delta):
-    if lissage == "Aucun":
-        prob_mot = freq_dist_trigrame.freq(trigram_seq)
-    else: #Laplace
-        prob_mot =  (freq_dist_trigrame.__getitem__(trigram_seq)+delta)/(nb_mot_proverbe + nb_mot_vocabulaire)
+    bigram_seq_precedent = list(nltk.bigrams(trigram_seq))
+    c_seq_precedent = freq_dist_bigrame.__getitem__(bigram_seq_precedent.__getitem__(0))
+
+    if c_seq_precedent ==0:
+        prob_mot = 0
+    else:
+        if lissage == "Aucun":
+            prob_mot = float(freq_dist_trigrame.__getitem__(trigram_seq)/c_seq_precedent)
+        else:  # Laplace
+            prob_mot = (freq_dist_trigrame.__getitem__(trigram_seq) + delta) / (c_seq_precedent + nb_mot_vocabulaire)
+
     if prob_mot ==0:
         return 0
     else:
