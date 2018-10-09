@@ -65,7 +65,7 @@ def trigram_probalite(trigram_seq, lissage,delta):
         if lissage == "Aucun":
             prob_mot = float((freq_dist_trigrame.__getitem__(trigram_seq))/float(c_seq_precedent))
         else:  # Laplace
-            prob_mot = float(freq_dist_trigrame.__getitem__(trigram_seq) + delta) / flaot(c_seq_precedent + nb_mot_vocabulaire)
+            prob_mot = float(freq_dist_trigrame.__getitem__(trigram_seq) + delta) / float(c_seq_precedent + nb_mot_vocabulaire)
 
     if prob_mot ==0:
         return 0
@@ -80,7 +80,7 @@ def probalite_phrase(phrase, lissage, delta, N):
         3: trigram_probalite,
     }
     tok_phrase = word_tokenize(phrase)
-    prob_phrase = 1
+    prob_phrase = 0
     func = switcher.get(N, lambda: "Invalid")
     # Execute the function
     if N ==1:
@@ -95,7 +95,6 @@ def probalite_phrase(phrase, lissage, delta, N):
             trm_phrase = list(nltk.trigrams(tok_phrase))
             for v in trm_phrase:
                 prob_phrase = func(v, lissage,delta) + prob_phrase
-
     return prob_phrase
 
 
@@ -117,11 +116,11 @@ for n in range(1,4):
         if m1 is not None:
             proverbe = m1.group(1)
             proverbe_final = proverbe.replace("***", m1.group(2))
-            prob_phrase_essai = probalite_phrase(proverbe_final, Lissage,test_delta, n)
+            prob_phrase_essai = math.exp(probalite_phrase(proverbe_final, Lissage,test_delta, n))
 
             for j in range (1,4):
                 proverbe_essai = proverbe.replace("***", m1.group(2+j))
-                prob_phrase = probalite_phrase(proverbe_essai,Lissage,test_delta,n)
+                prob_phrase = math.exp(probalite_phrase(proverbe_essai,Lissage,test_delta,n))
                 if prob_phrase_essai < prob_phrase:
                     proverbe_final =  proverbe_essai
                     prob_phrase_essai = prob_phrase
