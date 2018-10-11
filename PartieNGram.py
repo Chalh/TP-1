@@ -126,6 +126,6 @@ for n in range(1,4):
                     proverbe_final =  proverbe_essai
                     prob_phrase_essai = prob_phrase
 
- #           print proverbe_final
+            print proverbe_final
 
 file.close()
