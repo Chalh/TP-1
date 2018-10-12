@@ -108,10 +108,12 @@ def Calcul_Perplexite(phrase, lissage, delta, N):
 p1 = re.compile(r'{*"(.*)":\s*\["(.+\b)",\s"(.+\b)",\s"(.+\b)",\s"(.+\b)"],*}*')
 
 Lissage = "Lapace"
-test_delta = 2
+test_delta = 100
 #Lissage = "Aucun"
-
-
+filenameout = "/home/chiheb/share/Travail-1/ngram resultat/out_prv"+Lissage+"_"+test_delta.__str__()+".txt"
+f = open (filenameout,"w")
+stdout_org = sys.stdout
+sys.stdout = f
 for n in range(1,4):
     print ("---------------------------------------"+n.__str__()+"- GRAME---------------------------------------------")
     file = open('test1.txt', 'r')
@@ -123,15 +125,19 @@ for n in range(1,4):
             proverbe = m1.group(1)
             proverbe_final = proverbe.replace("***", m1.group(2))
             prob_phrase_essai = prob_phrase = probalite_phrase(proverbe_final,Lissage,test_delta,n)
-
+            mot_final = m1.group(2)
             for j in range (0,4):
                 proverbe_essai = proverbe.replace("***", m1.group(2+j))
                 prob_phrase = probalite_phrase(proverbe_essai,Lissage,test_delta,n)
-               # print proverbe_essai + ";" + prob_phrase.__str__()
+                #print proverbe_essai + ";" + prob_phrase.__str__()+";" + Calcul_Perplexite(proverbe_essai,Lissage,test_delta,n).__str__()
                 if prob_phrase_essai < prob_phrase:
                     proverbe_final =  proverbe_essai
+                    mot_final = m1.group(2+j)
                     prob_phrase_essai = prob_phrase
-            perplexite_prvfinal = Calcul_Perplexite(proverbe_final,Lissage,test_delta,n)
-            print proverbe_final+";"+ perplexite_prvfinal.__str__()
+            #perplexite_prvfinal = Calcul_Perplexite(proverbe_final,Lissage,test_delta,n)
+            #print proverbe_final+";"+ perplexite_prvfinal.__str__()
+            print  mot_final
 
 file.close()
+f.close()
+sys.stdout = stdout_org
