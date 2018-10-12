@@ -108,7 +108,7 @@ def Calcul_Perplexite(phrase, lissage, delta, N):
 p1 = re.compile(r'{*"(.*)":\s*\["(.+\b)",\s"(.+\b)",\s"(.+\b)",\s"(.+\b)"],*}*')
 
 Lissage = "Lapace"
-test_delta = 1
+test_delta = 2
 #Lissage = "Aucun"
 
 
