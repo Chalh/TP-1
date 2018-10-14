@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+########################################################################################################################
+#                                                                                                                      #
+# AUTEUR: CHIHEB EL OUEKDI
+#  IFT - 7022
+#  TRAVAIL-1
+# DATE: 12 OCTOBRE 2018                                                                                                #
+########################################################################################################################
+
+
 import nltk
 import re
 from nltk import word_tokenize
@@ -14,8 +24,12 @@ file = open('proverbes.txt', 'rb')
 contenu_proverbes_train = file.read()
 file.close()
 
+########################################################################################################################
+#                                                                                                                      #
+#               Preparation de la structure de calcul de probabilite avec NLTK
+#                                                                                                                      #
+########################################################################################################################
 
-#Preparation de la structure de calcul de probabilite avec NLTK
 
 tokens_train = word_tokenize(contenu_proverbes_train)
 bigram_train = list(nltk.bigrams(tokens_train))
@@ -27,11 +41,18 @@ freq_dist_unigram = FreqDist(tokens_train)
 freq_dist_bigrame = FreqDist(bigram_train)
 freq_dist_trigrame = FreqDist(trigram_train)
 
+
+
+########################################################################################################################
+#                                                                                                                      #
+#               FONCTIONS DE CALCUL DE PROBABILITÉ
+#                                                                                                                      #
+########################################################################################################################
 def unigram_probalite(mot, lissage, delta):
     if lissage == "Aucun":
         prob_mot = float(freq_dist_unigram.freq(mot))
     else: #Laplace
-        prob_mot =  float(freq_dist_unigram.__getitem__(mot)+delta)/float(nb_mot_proverbe + nb_mot_vocabulaire)
+        prob_mot =  float(freq_dist_unigram.__getitem__(mot)+delta)/float(nb_mot_proverbe + (nb_mot_vocabulaire*delta))
     if prob_mot ==0:
         return -99
     else:
@@ -47,7 +68,7 @@ def bigram_probalite(bigram_seq, lissage,delta):
         else:
             prob_mot = float(freq_dist_bigrame.__getitem__(bigram_seq))/float(c_mot_precedent)
     else:  # Laplace
-        prob_mot = float(freq_dist_bigrame.__getitem__(bigram_seq) + delta) / float(c_mot_precedent + nb_mot_vocabulaire)
+        prob_mot = float(freq_dist_bigrame.__getitem__(bigram_seq) + delta) / float(c_mot_precedent + (nb_mot_vocabulaire*delta))
 
     if prob_mot ==0:
         return -99
@@ -65,13 +86,17 @@ def trigram_probalite(trigram_seq, lissage,delta):
         else:
             prob_mot = float((freq_dist_trigrame.__getitem__(trigram_seq))/float(c_seq_precedent))
     else:  # Laplace
-         prob_mot = float(freq_dist_trigrame.__getitem__(trigram_seq) + delta) / float(c_seq_precedent + nb_mot_vocabulaire)
+         prob_mot = float(freq_dist_trigrame.__getitem__(trigram_seq) + delta) / float(c_seq_precedent + (nb_mot_vocabulaire*delta))
 
     if prob_mot ==0:
         return -99
     else:
         return math.log(prob_mot)
-
+########################################################################################################################
+#                                                                                                                      #
+#              CALCUL DE PROBABILITÉ D'UNE PHRASE
+#                                                                                                                      #
+########################################################################################################################
 
 def probalite_phrase(phrase, lissage, delta, N):
     switcher = {
@@ -97,6 +122,11 @@ def probalite_phrase(phrase, lissage, delta, N):
                 prob_phrase = float(func(v, lissage,delta) + prob_phrase)
     return prob_phrase
 
+########################################################################################################################
+#                                                                                                                      #
+#               CALCUL DE PERPLEXITÉ
+#                                                                                                                      #
+########################################################################################################################
 def Calcul_Perplexite(phrase, lissage, delta, N):
     tok_phrase = word_tokenize(phrase)
     nbr_mot = tok_phrase.__len__()
@@ -105,15 +135,38 @@ def Calcul_Perplexite(phrase, lissage, delta, N):
 
     return perplexite
 
+
+
+########################################################################################################################
+#                                                                                                                      #
+#          UTILISATION DE RE POUR LIRE LES PHRASES ET MOTS DE TESTS
+#                                                                                                                      #
+########################################################################################################################
+
 p1 = re.compile(r'{*"(.*)":\s*\["(.+\b)",\s"(.+\b)",\s"(.+\b)",\s"(.+\b)"],*}*')
 
-Lissage = "Lapace"
-test_delta = 100
+########################################################################################################################
+#                                                                                                                      #
+#               CONTRÔLE DE L'APPLICATION DU LISSAGE
+#                                                                                                                      #
+########################################################################################################################
 #Lissage = "Aucun"
-filenameout = "/home/chiheb/share/Travail-1/ngram resultat/out_prv"+Lissage+"_"+test_delta.__str__()+".txt"
-f = open (filenameout,"w")
-stdout_org = sys.stdout
-sys.stdout = f
+Lissage = "Lapace"
+test_delta = 0.7
+
+
+
+#filenameout = "out_prv"+Lissage+"_"+test_delta.__str__()+".txt"
+#f = open (filenameout,"w")
+#stdout_org = sys.stdout
+#sys.stdout = f
+
+########################################################################################################################
+#                                                                                                                      #
+#               TEST DES MODÈLES
+#                                                                                                                      #
+########################################################################################################################
+
 for n in range(1,4):
     print ("---------------------------------------"+n.__str__()+"- GRAME---------------------------------------------")
     file = open('test1.txt', 'r')
@@ -134,10 +187,10 @@ for n in range(1,4):
                     proverbe_final =  proverbe_essai
                     mot_final = m1.group(2+j)
                     prob_phrase_essai = prob_phrase
-            #perplexite_prvfinal = Calcul_Perplexite(proverbe_final,Lissage,test_delta,n)
-            #print proverbe_final+";"+ perplexite_prvfinal.__str__()
-            print  mot_final
+            perplexite_prvfinal = Calcul_Perplexite(proverbe_final,Lissage,test_delta,n)
+            print proverbe_final+";"+ perplexite_prvfinal.__str__()
+            #print  mot_final+";"+Calcul_Perplexite(proverbe_final,Lissage,test_delta,n).__str__()
 
 file.close()
-f.close()
-sys.stdout = stdout_org
+#f.close()
+#sys.stdout = stdout_org

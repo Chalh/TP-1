@@ -1,10 +1,23 @@
+
 # -*- coding: utf-8 -*-
+# ########################################################################################################################
+#                                                                                                                      #
+# AUTEUR: CHIHEB EL OUEKDI
+#  IFT - 7022
+#  TRAVAIL-1
+# DATE: 12 OCTOBRE 2018                                                                                                #
+########################################################################################################################
+
 
 import re
 import sys
 reload(sys)
 
-
+########################################################################################################################
+#                                                                                                                      #
+#               FONCTION D'EXTRACTION DES QUANTITÉS/INGRÉDIENTS D'UNE PHRASE EN PARAMÈTRES
+#                                                                                                                      #
+########################################################################################################################
 def get_ingredient(ligne_ingredients):
 
     p2 = re.compile(
@@ -27,26 +40,30 @@ sys.setdefaultencoding('utf8')
 file = open('ingredients.txt','r')
 fileext =  open("log.txt", 'w')
 
-# Une ligne d ingredient ne contient pas de mot contenant la suffixe tion
+########################################################################################################################
+#                                                                                                                      #
+#               CHERCHER LES LIGNES QUI CONTIENNENT LE SUFFIXE "TION" POUR LES IGNORER DANS LA SUITE
+#                                                                                                                      #
+########################################################################################################################
+
+
 
 p1 = re.compile(r"^((.*tion.*))$")
 
-#   MESURE [UNITÉ] INGRÉDIENT
-nb_ligne = 1
-nb_ok = 1
+
+
 for line in file:
     m1 = p1.search(line)
-    nb_ok = nb_ok + 1
     if m1 is None:
         quantite_ingredient = get_ingredient(line)
         ligne_ecrire = line.rstrip("\n") + "  " + "; QUANTITÉ:" + quantite_ingredient[0] + " ; " + "INGRÉDIENT:" + quantite_ingredient[1]
-        nb_ligne = nb_ligne + 1
-    else:
-        ligne_ecrire = line.rstrip("\n") + "  " + "; QUANTITÉ:" +  " S/O ; INGRÉDIENT: S/O " + "\n"
+
+#    else:
+#LES LIGNES QUI CONTIENNENT LE SUFFIXE "TION" ON ECRIT S/O DANS QUANTITÉ ET INGRÉDIENT
+ #       ligne_ecrire = line.rstrip("\n") + "  " + "; QUANTITÉ:" +  " S/O ; INGRÉDIENT: S/O " + "\n"
     print ligne_ecrire
 
 file.close()
 fileext.close()
-print(nb_ligne.__str__())
-print(nb_ok.__str__())
+
 
