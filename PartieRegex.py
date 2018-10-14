@@ -18,6 +18,7 @@ reload(sys)
 #               FONCTION D'EXTRACTION DES QUANTITÉS/INGRÉDIENTS D'UNE PHRASE EN PARAMÈTRES
 #                                                                                                                      #
 ########################################################################################################################
+
 def get_ingredient(ligne_ingredients):
 
     p2 = re.compile(
